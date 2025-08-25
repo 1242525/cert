@@ -45,6 +45,7 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
+        backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
