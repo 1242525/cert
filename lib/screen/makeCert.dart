@@ -14,9 +14,9 @@ class CertDownloadPage extends StatefulWidget {
 class _CertDownloadPageState extends State<CertDownloadPage> {
   final TextEditingController _commonNameController = TextEditingController();
   final TextEditingController _countryNameController = TextEditingController();
-  final TextEditingController _provinceNameController = TextEditingController();
-  final TextEditingController _localNameController = TextEditingController();
-  final TextEditingController _orgNameController = TextEditingController();
+  final TextEditingController _provinceNameController = TextEditingController(text: 'seoul');
+  final TextEditingController _localNameController = TextEditingController(text: 'jamsil');
+  final TextEditingController _orgNameController = TextEditingController(text: 'bangi');
 
   Uint8List? lastDownloadedBytes;
 

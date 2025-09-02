@@ -20,7 +20,7 @@ class ApiService {
       String province_name,
       String local_name,
       String org_name) async {
-    var url = Uri.parse('https://220.149.241.73:5000/get_key');
+    var url = Uri.parse('http://220.149.241.73:5000/get_key');
 
     try {
       var response = await http.post(
