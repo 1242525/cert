@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'dart:html' as html;
 import 'package:archive/archive.dart';
+import 'package:crypto/crypto.dart';
 
 class ApiService {
   final List<String> _pemFiles = [];
@@ -84,4 +85,28 @@ class ApiService {
     }
     return "파일을 읽을 수 없습니다.";
   }
+
+  // PEM 파일 복호화 예시 (AES, RSA 등 필요하면 구현)
+  String decryptPem(String encryptedContent) {
+    // 예시: 실제로는 AES/RSA로 복호화 로직 구현
+    // 지금은 그냥 Base64 디코딩만 예시로 넣음
+    try {
+      return utf8.decode(base64.decode(encryptedContent));
+    } catch (e) {
+      print('디크립션 실패: $e');
+      return encryptedContent; // 실패하면 원본 반환
+    }
+  }
+
+  Future<String> readAndDecryptPem(Uint8List zipBytes, String fileName) async {
+    final archive = ZipDecoder().decodeBytes(zipBytes);
+    for (final file in archive) {
+      if (file.isFile && file.name == fileName) {
+        final rawContent = utf8.decode(file.content as List<int>);
+        return decryptPem(rawContent); // 복호화 적용
+      }
+    }
+    return "파일을 읽을 수 없습니다.";
+  }
 }
+

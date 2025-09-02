@@ -54,12 +54,17 @@ class _SearchCertState extends State<SearchCert> {
                         ? ElevatedButton(
                       onPressed: () {
                         if (widget.lastDownloadedBytes != null) {
+
+                          //압축해제
                           extractedFiles = widget.service.unzipZipBytes(widget.lastDownloadedBytes!);
 
                           // 리스트에 추가
                           for (var f in extractedFiles) {
                             widget.service.addPemFile(f);
                           }
+
+                          //zip파일 제거
+                          widget.service.pemFiles.remove(fileName);
                           setState(() {});
                         }
                       },
@@ -68,7 +73,7 @@ class _SearchCertState extends State<SearchCert> {
                         : null,
                     onTap: () async {
                       if (!isZip && fileName.endsWith('.crt.pem')) {
-                        final content = await widget.service.readPemFromBytes(
+                        final decryptedContent = await widget.service.readAndDecryptPem(
                             widget.lastDownloadedBytes!, fileName);
 
                         showDialog(
@@ -77,7 +82,7 @@ class _SearchCertState extends State<SearchCert> {
                             title: Text(fileName),
                             content: SingleChildScrollView(
                               child: Text(
-                                content,
+                                decryptedContent,
                                 style: const TextStyle(fontFamily: 'monospace'),
                               ),
                             ),
