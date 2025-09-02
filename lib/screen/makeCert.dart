@@ -1,8 +1,11 @@
+import 'package:cert/screen/searchCert.dart';
 import 'package:flutter/material.dart';
 import '../api/api_service.dart';
+import '../screen/searchCert.dart';
 
 class CertDownloadPage extends StatefulWidget {
-  const CertDownloadPage({super.key});
+  final ApiService service;
+  const CertDownloadPage({super.key, required this.service});
 
   @override
   State<CertDownloadPage> createState() => _CertDownloadPageState();
@@ -27,24 +30,63 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
     final local_name = _localNameController.text.trim();
     final org_name = _orgNameController.text.trim();
 
+
+    await widget.service.downloadCertWeb(
+      common_name,
+      country_name,
+      province_name,
+      local_name,
+      org_name,
+    );
+
+    widget.service.addPemFile('$common_name.zip');
+
+
     setState(() {
       _isLoading = true;
       _Error = '';
     });
-
-
-    final api = ApiService();
-    final result = await api.downloadCertWeb(common_name,
-        country_name,
-        province_name,
-        local_name,
-        org_name);
   }
+
+  void _onScreenPressed(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_)=>SearchCert(service: widget.service),
+      ),
+    );
+  }
+
+
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 2,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text("create cert",
+            ),
+            const SizedBox(width: 1500),
+            IconButton(
+            icon: const Icon(Icons.search), // 🔍 Search 아이콘 추가
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SearchCert(service: widget.service,), // 🔍 SearchCert 페이지로 이동
+                ),
+              );
+            },
+          ),
+
+          ],
+        ),
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20),

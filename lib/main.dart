@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'api/api_service.dart';
 import 'screen/makeCert.dart';
-import 'screen/home.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -8,14 +10,26 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Cert App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // ✅ 앱 전체 기본 폰트 적용
+        textTheme: GoogleFonts.nunitoTextTheme(
+          Theme.of(context).textTheme,
+        ),
+        appBarTheme: AppBarTheme(
+          titleTextStyle: GoogleFonts.nunito(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-      home: const home(),
+      home:  CertDownloadPage(service: ApiService())
     );
   }
 }
+
+

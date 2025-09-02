@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+/*import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'searchCert.dart';
 
@@ -50,7 +50,7 @@ class home extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => SearchCert(),
+                        builder: (_) => SearchCert,
                       ),
                     );
                   },
@@ -98,3 +98,5 @@ class home extends StatelessWidget {
     );
   }
 }
+
+ */

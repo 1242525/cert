@@ -3,6 +3,15 @@ import 'package:http/http.dart' as http;
 import 'dart:html' as html;
 
 class ApiService {
+
+  final List<String> _pemFiles=[];
+
+  List<String> get pemFiles => List.unmodifiable(_pemFiles);
+
+  void addPemFile(String fileName){
+    _pemFiles.add(fileName);
+  }
+
   Future<void> downloadCertWeb(String common_name, country_name, province_name, local_name, org_name) async {
     var url = Uri.parse('https://220.149.241.73:5000/get_key');
 
