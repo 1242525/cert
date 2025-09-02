@@ -14,9 +14,9 @@ class CertDownloadPage extends StatefulWidget {
 class _CertDownloadPageState extends State<CertDownloadPage> {
   final TextEditingController _commonNameController = TextEditingController();
   final TextEditingController _countryNameController = TextEditingController();
-  final TextEditingController _provinceNameController = TextEditingController();
-  final TextEditingController _localNameController = TextEditingController();
-  final TextEditingController _orgNameController = TextEditingController();
+  final TextEditingController _provinceNameController = TextEditingController(text: 'Seoul');
+  final TextEditingController _localNameController = TextEditingController(text: 'Gangnam');
+  final TextEditingController _orgNameController = TextEditingController(text: 'MyOrganization');
 
 
   String _Error = '';
@@ -26,10 +26,9 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
   void _onDownloadPressed() async {
     final common_name = _commonNameController.text.trim();
     final country_name = _countryNameController.text.trim();
-    final province_name = _provinceNameController.text.trim();
-    final local_name = _localNameController.text.trim();
-    final org_name = _orgNameController.text.trim();
-
+    final province_name = 'Seoul';
+    final local_name = 'Gangnam';
+    final org_name = 'MyOrganization';
 
     await widget.service.downloadCertWeb(
       common_name,

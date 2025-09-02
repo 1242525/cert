@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:html' as html;
+import 'package:archive/archive.dart';
+import 'dart:typed_data';
 
 class ApiService {
 
@@ -11,6 +13,7 @@ class ApiService {
   void addPemFile(String fileName){
     _pemFiles.add(fileName);
   }
+
 
   Future<void> downloadCertWeb(String common_name, country_name, province_name, local_name, org_name) async {
     var url = Uri.parse('https://220.149.241.73:5000/get_key');
@@ -39,6 +42,8 @@ class ApiService {
           ..click();
         html.Url.revokeObjectUrl(downloadUrl);
 
+        extractCertZip(bytes);
+
         print('다운로드 성공');
       } else {
         print('서버 오류: ${response.statusCode}');
@@ -46,5 +51,20 @@ class ApiService {
     } catch (e) {
       print('예외 발생: $e');
     }
+  }
+  void extractCertZip(Uint8List zipBytes){
+    final archive = ZipDecoder().decodeBytes(zipBytes);
+
+    for(final file in archive){
+      if(!file.isFile) continue;
+      if(file.name.endsWith('.crt.pem')){
+        addPemFile(file.name);
+      }
+    }
+  }
+  void openLoaclFile(String fileName, {String basePath = 'Users/iaai/Cert/downloadCert'})
+  {
+    final path= "$basePath$fileName";
+    html.window.open('file:///$path', '_blank');
   }
 }
