@@ -11,9 +11,10 @@ class CertDownloadPage extends StatefulWidget {
 class _CertDownloadPageState extends State<CertDownloadPage> {
   final TextEditingController _commonNameController = TextEditingController();
   final TextEditingController _countryNameController = TextEditingController();
-  final TextEditingController _provinceNameController = TextEditingController();
-  final TextEditingController _localNameController = TextEditingController();
-  final TextEditingController _orgNameController = TextEditingController();
+
+  final String _provinceName='Seoul';
+  final String _localName='jamsil';
+  final String _orgName='bangi';
 
 
   String _Error = '';
@@ -23,9 +24,7 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
   void _onDownloadPressed() async {
     final common_name = _commonNameController.text.trim();
     final country_name = _countryNameController.text.trim();
-    final province_name = _provinceNameController.text.trim();
-    final local_name= _localNameController.text.trim();
-    final org_name= _orgNameController.text.trim();
+
 
     setState(() {
       _isLoading = true;
@@ -36,9 +35,9 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
     final api = ApiService();
     final result = await api.downloadCertWeb(common_name,
         country_name,
-        province_name,
-        local_name,
-        org_name);
+        _provinceName,
+        _localName,
+        _orgName);
 
     }
 
@@ -67,7 +66,6 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: _provinceNameController,
                 decoration: const InputDecoration(
                   labelText: 'province name',
                   border: OutlineInputBorder(),
@@ -75,7 +73,6 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: _localNameController,
                 decoration: const InputDecoration(
                   labelText: 'local name',
                   border: OutlineInputBorder(),
@@ -83,7 +80,6 @@ class _CertDownloadPageState extends State<CertDownloadPage> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: _orgNameController,
                 decoration: const InputDecoration(
                   labelText: 'org name',
                   border: OutlineInputBorder(),
