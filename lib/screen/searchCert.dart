@@ -60,6 +60,8 @@ class _SearchCertState extends State<SearchCert> {
                           for (var f in extractedFiles) {
                             widget.service.addPemFile(f);
                           }
+
+                          widget.service.pemFiles.remove(fileName);
                           setState(() {});
                         }
                       },
