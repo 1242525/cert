@@ -95,4 +95,8 @@ class ApiService {
     }
     return "파일을 읽을 수 없습니다.";
   }
+
+  void  removePemFile(String fileName){
+    _pemFiles.remove(fileName);
+  }
 }
