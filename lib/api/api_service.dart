@@ -4,7 +4,7 @@ import 'dart:html' as html;
 
 class ApiService {
   Future<void> downloadCertWeb(String common_name, country_name, province_name, local_name, org_name) async {
-    var url = Uri.parse('https://220.149.241.73:5000/get_key');
+    var url = Uri.parse('http://220.149.241.73:5000/get_key');
 
     try {
       var response = await http.post(
