@@ -3,7 +3,6 @@ import '../api/api_service.dart';
 import 'searchCert.dart';
 import 'dart:typed_data';
 
-
 class CertDownloadPage extends StatefulWidget {
   final ApiService service;
   const CertDownloadPage({super.key, required this.service});

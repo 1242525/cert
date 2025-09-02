@@ -54,17 +54,12 @@ class _SearchCertState extends State<SearchCert> {
                         ? ElevatedButton(
                       onPressed: () {
                         if (widget.lastDownloadedBytes != null) {
-
-                          //압축해제
                           extractedFiles = widget.service.unzipZipBytes(widget.lastDownloadedBytes!);
 
                           // 리스트에 추가
                           for (var f in extractedFiles) {
                             widget.service.addPemFile(f);
                           }
-
-                          //zip파일 제거
-                          widget.service.pemFiles.remove(fileName);
                           setState(() {});
                         }
                       },
@@ -95,6 +90,7 @@ class _SearchCertState extends State<SearchCert> {
                         );
                       }
                     },
+
                   );
                 },
               ),
