@@ -70,17 +70,18 @@ class _SearchCertState extends State<SearchCert> {
                         : null,
                     onTap: () async {
                       if (!isZip && fileName.endsWith('.crt.pem')) {
-                        final decryptedContent = await widget.service.readAndDecryptPem(
+                        final result = await widget.service.readAndDecodingPem(
                             widget.lastDownloadedBytes!, fileName);
 
                         showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
-                            title: Text(fileName),
+                            backgroundColor: result.isValid ? Colors.green[100] : Colors.red[100],
+                            title: const Text("인증서 정보"),
                             content: SingleChildScrollView(
                               child: Text(
-                                decryptedContent,
-                                style: const TextStyle(fontFamily: 'monospace'),
+                                result.content,
+                                style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
                               ),
                             ),
                             actions: [

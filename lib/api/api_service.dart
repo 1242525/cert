@@ -3,9 +3,18 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'dart:html' as html;
 import 'package:archive/archive.dart';
+import 'package:x509/x509.dart';
+
+class CertValid{
+  final String content;
+  final bool isValid;
+  CertValid({required this.content, required this.isValid});
+}
 
 class ApiService {
   final List<String> _pemFiles = [];
+
+
 
   List<String> get pemFiles => List.unmodifiable(_pemFiles);
 
@@ -14,8 +23,7 @@ class ApiService {
   }
 
   // ZIP 파일 다운로드 및 blob 저장
-  Future<Uint8List?> downloadCertWeb(
-      String common_name,
+  Future<Uint8List?> downloadCertWeb(String common_name,
       String country_name,
       String province_name,
       String local_name,
@@ -74,29 +82,62 @@ class ApiService {
     return crtPemFiles;
   }
 
-  String decryptPem(String encryptedContent) {
-    // 예시: 실제로는 AES/RSA로 복호화 로직 구현
-    // 지금은 그냥 Base64 디코딩만 예시로 넣음
-    try {
-      return utf8.decode(base64.decode(encryptedContent));
-    } catch (e) {
-      print('디크립션 실패: $e');
-      return encryptedContent; // 실패하면 원본 반환
-    }
-  }
 
-  Future<String> readAndDecryptPem(Uint8List zipBytes, String fileName) async {
+
+  Future<CertValid> readAndDecodingPem(Uint8List zipBytes, String fileName) async {
     final archive = ZipDecoder().decodeBytes(zipBytes);
     for (final file in archive) {
       if (file.isFile && file.name == fileName) {
         final rawContent = utf8.decode(file.content as List<int>);
-        return decryptPem(rawContent); // 복호화 적용
+        final certs = parsePem(rawContent);
+
+        if (certs.isNotEmpty && certs.first is X509Certificate) {
+          final cert = certs.first as X509Certificate;
+
+          final subjectLines = cert.tbsCertificate.subject
+              .toString()
+              .split(',')
+              .map((s) => s.trim())
+              .join('\n');
+
+          final issuerLines = cert.tbsCertificate.issuer
+              .toString()
+              .split(',')
+              .map((s) => s.trim())
+              .join('\n');
+
+          final validity = cert.tbsCertificate.validity;
+          final validFrom = validity?.notBefore?.toString() ?? '알 수 없음';
+          final validTo = validity?.notAfter?.toString() ?? '알 수 없음';
+
+          final now = DateTime.now();
+          final isValid = validity?.notAfter?.isAfter(now) ?? false;
+
+          final content = '''
+Subject:
+$subjectLines
+
+Issuer:
+$issuerLines
+
+Valid From: $validFrom
+Valid To: $validTo
+''';
+
+          return CertValid(content: content, isValid: isValid);
+        } else {
+          return CertValid(content: "파일을 읽을 수 없습니다.", isValid: false);
+        }
       }
     }
-    return "파일을 읽을 수 없습니다.";
+
+    return CertValid(content: '파일을 찾을 수 없습니다.', isValid: false);
   }
 
-  void  removePemFile(String fileName){
-    _pemFiles.remove(fileName);
+
+
+    void removePemFile(String fileName) {
+      _pemFiles.remove(fileName);
+    }
   }
-}
+
